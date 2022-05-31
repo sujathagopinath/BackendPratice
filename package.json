@@ -1,0 +1,23 @@
+{
+  "name": "Backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:tsc": "tsc --watch -p .",
+    "dev:serve": "nodemon -e js -w lib lib/server.js",
+    "dev": "run-p dev:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.2",
+    "@types/bcryptjs": "^2.4.2",
+    "bcryptjs": "^2.4.3",
+    "convict": "^6.2.3",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mssql": "^8.1.1"
+  }
+}
