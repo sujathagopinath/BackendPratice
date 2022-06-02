@@ -2,6 +2,7 @@ import { Server, Request, ResponseToolkit } from "@hapi/hapi";
 import { Config } from "./config/settings";
 import { poolPromise } from "./database";
 import { routes } from './routes/index'
+import { redis } from "./redis";
 
 const init = async () => {
     const server: Server = new Server({
@@ -13,6 +14,7 @@ const init = async () => {
     ])
 
     poolPromise
+    redis
     await server.start();
     console.log('Server running on 6000');
     server.route(routes)

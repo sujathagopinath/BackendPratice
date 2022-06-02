@@ -14,8 +14,10 @@
   "dependencies": {
     "@hapi/hapi": "^20.2.2",
     "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.8",
     "bcryptjs": "^2.4.3",
     "convict": "^6.2.3",
+    "ioredis": "^5.0.6",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mssql": "^8.1.1"

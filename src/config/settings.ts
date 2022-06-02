@@ -64,6 +64,18 @@ export const Config = convict({
             default: 1000
         }
     },
+    redis: {
+        host: {
+            doc: "redis_host",
+            format: String,
+            default: 'localhost'
+        },
+        port: {
+            doc: "redis_port",
+            format: Number,
+            default: 2001
+        }
+    },
     jwt: {
         jwt_key: {
             doc: "secret data",

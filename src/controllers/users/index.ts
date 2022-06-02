@@ -1,7 +1,9 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
-import { ILoginRequest } from '../../interfaces/index';
+import { IAuthRequest, ILoginRequest } from '../../interfaces/index';
 import { poolPromise } from '../../database'
 import { Config } from "../../config/settings";
+import { tokenMiddleware } from "../../plugins/tokenmiddleware";
+import { redis } from "../../redis";
 const bcrypt = require('bcryptjs')
 const Jwt = require('jsonwebtoken')
 
@@ -16,6 +18,8 @@ class userData {
                     if (err)
                         reject(err);
                     const response = h.response(data);
+                    var datas = JSON.stringify(data);
+                    redis.set('createdata', datas)
                     resolve(response);
 
                 });
@@ -25,65 +29,44 @@ class userData {
 
     async loginUser(request: ILoginRequest, h: ResponseToolkit) {
         const datas = request.payload
-        console.log('datas', datas)
         const result = await poolPromise
         const somelogin: any = new Promise(async (resolve: any, reject: any) => {
-            result.query("exec sploginuser  @Email='" + datas.Email + "'")
-                .then(function (datas: any) {
-                    bcrypt.compare(
-                        request.payload.Password,
-                        datas["recordset"][0]["Password"]
-                    );
+            result.query("exec sploginuser  @Email='" + datas.Email + "'",
+                async (err: any, data: any) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        await bcrypt.compare(request.payload.Password, data.recordset[0].Password)
+                        const accesstoken = await Jwt.sign(
+                            {
+                                userId: data.recordset[0].userId,
+                            },
+                            Config.get('jwt').jwt_key,
+                            {
+                                expiresIn: Config.get('jwt').expiresIn
+                            }
 
-                    const accesstoken = Jwt.sign(
-                        {
-                            // userId: datas["recordset"][0]["userId"],
-                            Email: datas["recordset"][0]["Email"],
-                        },
-                        Config.get('jwt').jwt_key,
-                        Config.get('jwt').expiresIn
-                    );
-                    const response = h.response({
-                        datas,
-                        accesstoken
-                    });
-
-                    resolve(response);
+                        )
+                        const response = h.response({
+                            accesstoken
+                        })
+                        var datas = JSON.stringify(data);
+                        redis.set('logindata', datas)
+                        resolve(response)
+                    }
                 })
-            // const response = h.response(datas);
-            // resolve(response);
-            // console.log('data', datas["recordset"][0]["Email"])
-            // if (datas["recordset"][0]["Email"]) {
-            // bcrypt.compare(request.payload.Password, datas["recordset"][0]["Password"])
-            // }
-            // console.log(datas[0]["Email"])
         })
-        // .then(function (datas: any) {
-        //     console.log('data', datas)
-        //     bcrypt.compare(
-        //         request.payload.Password,
-        //         datas["recordset"][0]["Password"]
-        //     )
-        //     const accesstoken = Jwt.sign(
-        //         {
-        //             userId: datas["recordset"][0]["userId"],
-        //             email: datas["recordset"][0]["Email"],
-        //         },
-        //         Config.get('jwt').jwt_key,
-        //         Config.get('jwt').expiresIn
-        //     );
-        //     const response = h.response({
-        //         datas,
-        //         accesstoken
-        //     });
-        //     resolve(response)
-        // })
-        // .catch((err: any) => {
-        //     reject(err)
-        // })
-
-        // })
         return somelogin
+    }
+
+    async getUser(request: IAuthRequest, h: ResponseToolkit) {
+        const result = await poolPromise
+        const userId = request.decoded
+
+        const somegetUser: any = new Promise(async (resolve: any, reject: any) => {
+            result.query("exec spgetuser @userId='" + userId + "'")
+        })
+        return somegetUser
     }
 }
 
