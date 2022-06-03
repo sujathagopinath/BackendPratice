@@ -11,6 +11,9 @@ const init = async () => {
     });
 
     await server.register([
+        {
+            plugin: require('./plugins/index')
+        }
     ])
 
     poolPromise

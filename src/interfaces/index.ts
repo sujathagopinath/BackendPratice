@@ -9,8 +9,7 @@ export interface ILoginRequest extends Hapi.Request {
     }
 }
 
-export type IAuthRequest = ILoginRequest & {
-    decoded: Number
-    headers: { authorization: string };
+export type jwtPayload = {
+    userId: number,
 
 };

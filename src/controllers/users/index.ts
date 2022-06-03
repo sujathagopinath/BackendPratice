@@ -1,9 +1,9 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
-import { IAuthRequest, ILoginRequest } from '../../interfaces/index';
+import { jwtPayload, ILoginRequest } from '../../interfaces/index';
 import { poolPromise } from '../../database'
 import { Config } from "../../config/settings";
-import { tokenMiddleware } from "../../plugins/tokenmiddleware";
 import { redis } from "../../redis";
+import { verifyToken } from "../../plugins/tokenmiddleware";
 const bcrypt = require('bcryptjs')
 const Jwt = require('jsonwebtoken')
 
@@ -59,12 +59,19 @@ class userData {
         return somelogin
     }
 
-    async getUser(request: IAuthRequest, h: ResponseToolkit) {
+    async getUser(request: Request, h: ResponseToolkit) {
         const result = await poolPromise
-        const userId = request.decoded
-
+        const header = request.headers['authorization']
+        let token = header.split(" ")[1];
+        const verifyTokenDecode = verifyToken(token)
         const somegetUser: any = new Promise(async (resolve: any, reject: any) => {
-            result.query("exec spgetuser @userId='" + userId + "'")
+            result.query("exec spgetuser @userId='" + verifyTokenDecode.userId + "'", function (err: any, data: any) {
+                if (err)
+                    reject(err);
+                const response = h.response(data);
+                resolve(response);
+
+            });
         })
         return somegetUser
     }

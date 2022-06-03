@@ -1,6 +1,5 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
 import { users } from "../controllers/users"
-import { tokenMiddleware } from "../plugins/tokenmiddleware";
 import { userSchema } from "../validation"
 export const routes = [
     {
