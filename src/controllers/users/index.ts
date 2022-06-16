@@ -1,5 +1,5 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
-import { jwtPayload, ILoginRequest } from '../../interfaces/index';
+import { IJwtPayload, ILoginRequest } from '../../interfaces/index';
 import { poolPromise } from '../../database'
 import { Config } from "../../config/settings";
 import { redis } from "../../redis";
@@ -10,10 +10,10 @@ const Jwt = require('jsonwebtoken')
 class userData {
     async createUser(request: ILoginRequest, h: ResponseToolkit) {
         const data = request.payload
-        const hashPassword = await bcrypt.hash(data.Password, 10);
+        const hashPassword = await bcrypt.hash(data.password, 10);
         const result = await poolPromise
         const somecreate: any = new Promise(async (resolve: any, reject: any) => {
-            result.query("exec spcreateuser @Name='" + data.Name + "', @Email='" + data.Email + "', @Password='" + hashPassword + "';",
+            result.query("exec spcreateuser @name='" + data.name + "', @email='" + data.email + "', @password='" + hashPassword + "';",
                 function (err: any, data: any) {
                     if (err)
                         reject(err);
@@ -31,12 +31,12 @@ class userData {
         const datas = request.payload
         const result = await poolPromise
         const somelogin: any = new Promise(async (resolve: any, reject: any) => {
-            result.query("exec sploginuser  @Email='" + datas.Email + "'",
+            result.query("exec sploginuser  @Email='" + datas.email + "'",
                 async (err: any, data: any) => {
                     if (err) {
                         console.log(err)
                     } else {
-                        await bcrypt.compare(request.payload.Password, data.recordset[0].Password)
+                        await bcrypt.compare(request.payload.password, data.recordset[0].Password)
                         const accesstoken = await Jwt.sign(
                             {
                                 userId: data.recordset[0].userId,
@@ -78,3 +78,4 @@ class userData {
 }
 
 export const users = new userData()
+

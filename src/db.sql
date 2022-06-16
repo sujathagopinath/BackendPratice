@@ -3,9 +3,13 @@ use backendhapi
 create table Users
 (
     userId int primary key identity(1,1),
-    Name varchar(50),
-    Email varchar(50),
-    Password varchar(max),
+
+name varchar
+(50),
+    email varchar
+(50),
+    password varchar
+(max),
 );
 
 select * from Users
@@ -14,16 +18,28 @@ SET XACT_ABORT ON;
 BEGIN TRAN
 GO 
 
-create procedure [dbo].[spcreate]
+create procedure [dbo].[spcreateuser]
 (
-    @Name VARCHAR(50), @Email VARCHAR(50), @Password VARCHAR(MAX)
+
+@name VARCHAR
+(50), @email VARCHAR
+(50), @password VARCHAR
+(MAX)
 )
 AS
+
 SET NOCOUNT ON
-IF NOT EXISTS (Select Email from Users where Email = @Email)
-    BEGIN
-    INSERT into Users values(@Name,@Email,@Password)
-    select Name, Email  from Users  where Email = @Email 
+
+IF NOT EXISTS (Select email
+from Users
+where email = @email)
+            BEGIN
+
+INSERT into Users
+values(@name, @email, @password)
+SELECT name, email
+from Users
+where email = @email
 END
 SET NOCOUNT OFF
 RETURN 
@@ -38,12 +54,20 @@ GO
 
 create procedure [dbo].[sploginuser]
 (
-     @Email VARCHAR(50) 
+
+@email VARCHAR
+(50) 
 )
 AS
+
 SET NOCOUNT ON
-IF  EXISTS (Select Email from Users where  Email = @Email )
-    select userId,Email,Password from Users where Email = @Email 
+
+IF  EXISTS (Select email
+from Users
+where  email = @email )
+        SELECT userId, email, password
+from Users
+where email = @email
 SET NOCOUNT OFF
 RETURN 
 GO
@@ -60,8 +84,12 @@ create procedure [dbo].[spgetuser]
     @userId Int
 )
 AS
+
 SET NOCOUNT ON
-SELECT Name,Email from Users where userId = @userId
+
+SELECT name, email
+from Users
+where userId = @userId
 SET NOCOUNT OFF
 RETURN
 GO

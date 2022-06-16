@@ -1,6 +1,6 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
 import { Config } from '../config/settings'
-import { jwtPayload } from "../interfaces";
+import { IJwtPayload } from "../interfaces";
 import jwt from 'jsonwebtoken'
 
 // export const tokenMiddleware = async (request: IAuthRequest, h: ResponseToolkit, next: any) => {
@@ -31,7 +31,7 @@ import jwt from 'jsonwebtoken'
 
 export const verifyToken = (token: any) => {
     const decode = jwt.verify(token, Config.get('jwt').jwt_key)
-    return decode as jwtPayload
+    return decode as IJwtPayload
 }
 
 

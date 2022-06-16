@@ -1,15 +1,15 @@
-import * as Hapi from '@hapi/hapi'
+import { Request, ResponseToolkit } from "@hapi/hapi";
 
-export interface ILoginRequest extends Hapi.Request {
+export interface ILoginRequest extends Request {
     payload: {
-        Name: String,
-        Email: String
-        Password: String,
+        name: String,
+        email: String
+        password: String,
 
     }
 }
 
-export type jwtPayload = {
+export interface IJwtPayload {
     userId: number,
 
 };

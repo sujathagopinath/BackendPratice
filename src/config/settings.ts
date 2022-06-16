@@ -1,4 +1,5 @@
-const convict = require('convict');
+import convict from 'convict'
+
 export const Config = convict({
     env: {
         doc: "The application environment.",
@@ -90,6 +91,5 @@ export const Config = convict({
     }
 });
 
-var env = Config.get('env');
-Config.loadFile('./src/config/' + env + '.json');
+Config.loadFile('./src/config/' + Config.get('env') + '.json');
 Config.validate({ allowed: 'strict' });

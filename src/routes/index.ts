@@ -1,6 +1,6 @@
-import { Request, ResponseToolkit } from "@hapi/hapi";
 import { users } from "../controllers/users"
-import { userSchema } from "../validation"
+import { registerSchema, loginSchema, errorValidation } from "../validation"
+
 export const routes = [
     {
         method: "POST",
@@ -8,25 +8,20 @@ export const routes = [
         handler: users.createUser,
         options: {
             validate: {
-                payload: userSchema,
-                failAction: (request: Request, h: ResponseToolkit, error: any) => {
-                    return error.isJoi ? h.response(error.details[0]).takeover() : h.response(error).takeover();
-                }
+                payload: registerSchema,
+                failAction: errorValidation
             }
         }
 
     },
-
     {
         method: "POST",
         path: '/login',
         handler: users.loginUser,
         options: {
             validate: {
-                payload: userSchema,
-                failAction: (request: Request, h: ResponseToolkit, error: any) => {
-                    return error.isJoi ? h.response(error.details[0]).takeover() : h.response(error).takeover();
-                }
+                payload: loginSchema,
+                failAction: errorValidation
             }
         }
 
