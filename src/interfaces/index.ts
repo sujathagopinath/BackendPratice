@@ -1,15 +1,17 @@
-import { Request, ResponseToolkit } from "@hapi/hapi";
+import { Request } from "@hapi/hapi";
 
-export interface ILoginRequest extends Request {
+export interface ICreateRequest extends Request {
     payload: {
-        name: String,
-        email: String
-        password: String,
+        name: string,
+        email: string
+        password: string,
 
     }
 }
+export interface ILoginRequest extends Request {
+    payload: {
+        email: string
+        password: string,
 
-export interface IJwtPayload {
-    userId: number,
-
-};
+    }
+}

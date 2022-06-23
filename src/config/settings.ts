@@ -1,6 +1,6 @@
 import convict from 'convict'
 
-export const Config = convict({
+export const config = convict({
     env: {
         doc: "The application environment.",
         format: ["production", "development", "test"],
@@ -51,8 +51,6 @@ export const Config = convict({
             }
         }
     },
-
-
     hapi: {
         host: {
             doc: "hapi_host",
@@ -66,19 +64,14 @@ export const Config = convict({
         }
     },
     redis: {
-        host: {
-            doc: "redis_host",
-            format: String,
-            default: 'localhost'
-        },
-        port: {
-            doc: "redis_port",
-            format: Number,
-            default: 2001
+        ips: {
+            doc: "redis_ip",
+            format: Array,
+            default: ['127.0.0.1:7004'],
         }
     },
     jwt: {
-        jwt_key: {
+        jwtkey: {
             doc: "secret data",
             format: String,
             default: 'SECRET'
@@ -90,6 +83,4 @@ export const Config = convict({
         }
     }
 });
-
-Config.loadFile('./src/config/' + Config.get('env') + '.json');
-Config.validate({ allowed: 'strict' });
+config.loadFile('./src/config/' + config.get('env') + '.json');

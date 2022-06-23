@@ -1,7 +1,8 @@
-const sqlDb = require("mssql");
-import { Config } from './config/settings'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import sqlDb from "mssql";
+import { config } from './config/settings'
 
-export const poolPromise = sqlDb.ConnectionPool(Config.get("db"))
+export const poolPromise = new sqlDb.ConnectionPool(config.get("db"))
     .connect()
     .then((pool: any) => {
         console.log("Connected to MSSQL");

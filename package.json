@@ -8,18 +8,22 @@
     "dev:serve": "nodemon -e js -w lib lib/server.js",
     "dev": "run-p dev:*",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "lint": "eslint . --ext .ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hapi/basic": "^6.0.0",
     "@hapi/hapi": "^20.2.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/convict": "^6.1.1",
     "@types/jsonwebtoken": "^8.5.8",
+    "@types/mssql": "^8.0.2",
     "bcryptjs": "^2.4.3",
     "convict": "^6.2.3",
+    "hapi-auth-jwt2": "^10.2.0",
     "ioredis": "^5.0.6",
     "jest": "^28.1.0",
     "joi": "^17.6.0",
@@ -28,6 +32,9 @@
     "ts-jest": "^28.0.4"
   },
   "devDependencies": {
-    "@types/jest": "^28.1.1"
+    "@types/jest": "^28.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint": "^8.18.0"
   }
 }
