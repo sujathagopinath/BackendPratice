@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, ResponseToolkit } from "@hapi/hapi";
 import bcrypt from 'bcryptjs';
 import { ICreateRequest, ILoginRequest } from '../../interfaces/index';
@@ -9,6 +10,7 @@ class Userdata {
     async createUser(request: ICreateRequest, h: ResponseToolkit) {
         const hashPassword = await bcrypt.hash(request.payload.password, 10);
         const userData = await db.spCreateUser(request.payload, hashPassword)
+        console.log(userData.recordset[0].userId)
         redis.set(
             userData.recordset[0].userId,
             JSON.stringify(userData.recordset[0])
@@ -38,22 +40,21 @@ class Userdata {
     }
 
     async getUser(request: Request, h: ResponseToolkit) {
-        // const result = await poolPromise
-        // const header = request.headers['authorization']
-        // let token = header.split(" ")[1];
-        // const verifyTokenDecode = verifyToken(token)
-        const somegetUser: any = new Promise(async (resolve: any, reject: any) => {
-            // result.query("exec spgetuser @userId='" + verifyTokenDecode.userId + "'", function (err: any, data: any) {
-            //     if (err)
-            //         reject(err);
-            //     const response = h.response(data);
-            //     resolve(response);
+        // // const result = await poolPromise
+        // // const header = request.headers['authorization']
+        // // let token = header.split(" ")[1];
+        // // const verifyTokenDecode = verifyToken(token)
+        // const somegetUser: any = new Promise(async (resolve: any, reject: any) => {
+        //     // result.query("exec spgetuser @userId='" + verifyTokenDecode.userId + "'", function (err: any, data: any) {
+        //     //     if (err)
+        //     //         reject(err);
+        //     //     const response = h.response(data);
+        //     //     resolve(response);
 
-            // });
+        //     // });
             console.log('hello from getuser')
-            // let userId= request.decoded
-        })
-        return somegetUser
+        // })
+        // return somegetUser
     }
 }
 
